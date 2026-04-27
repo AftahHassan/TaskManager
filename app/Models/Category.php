@@ -6,5 +6,13 @@ use Illuminate\Database\Eloquent\Model;
 
 class Category extends Model
 {
-    //
+     protected $fillable = [
+        'name',
+    ];
+
+    // 🔗 Relation : Category a plusieurs Tasks
+    public function tasks()
+    {
+        return $this->hasMany(Task::class);
+    }
 }
