@@ -118,8 +118,7 @@ body {
 ══════════════════════════════════════ */
 
 .tm-body {
-    display: grid;
-    grid-template-columns: var(--sidebar-width) 1fr;
+    display: block;
     min-height: 100vh;
 }
 
@@ -293,8 +292,11 @@ body {
 /* ── Main content ── */
 .tm-main {
     margin-left: var(--sidebar-width);
-    padding: 2rem 2.25rem;
+    padding: 2rem 2.5rem;
     min-height: 100vh;
+    width: calc(100% - var(--sidebar-width));
+    max-width: 100%;
+    overflow-x: hidden;
 }
 
 /* ══════════════════════════════════════
@@ -454,8 +456,9 @@ body {
 .tm-stats-grid {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
-    gap: 1rem;
+    gap: 1.25rem;
     margin-bottom: 1.75rem;
+    width: 100%;
 }
 
 .tm-stat-card {
@@ -527,6 +530,7 @@ body {
     border-radius: var(--radius-xl);
     padding: 1.5rem;
     box-shadow: var(--shadow-sm);
+    width: 100%;
 }
 
 .tm-section-header {
@@ -725,6 +729,7 @@ body {
     border-radius: var(--radius-xl);
     overflow: hidden;
     box-shadow: var(--shadow-sm);
+    width: 100%;
 }
 
 .tm-table {
@@ -842,8 +847,9 @@ body {
     background: var(--bg-card);
     border: 1px solid var(--border);
     border-radius: var(--radius-xl);
-    padding: 2rem;
-    max-width: 680px;
+    padding: 2rem 2.5rem;
+    width: 100%;
+    max-width: 720px;
     box-shadow: var(--shadow-md);
 }
 
