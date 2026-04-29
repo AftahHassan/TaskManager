@@ -50,47 +50,73 @@
 
 </div>
 
-{{-- ══ RECENT TASKS ══ --}}
-<div class="tm-section">
-    <div class="tm-section-header">
-        <h2 class="tm-section-title">Tâches récentes</h2>
-        <a href="{{ route('tasks.index') }}" class="tm-link">Voir tout →</a>
-    </div>
-
-    @if($recentTasks->isEmpty())
-        <div class="tm-empty">
-            <span class="tm-empty-icon">◈</span>
-            <p>Aucune tâche pour le moment.</p>
-            <a href="{{ route('tasks.create') }}" class="tm-btn tm-btn-primary">Créer ma première tâche</a>
-        </div>
-    @else
-        <div class="tm-task-list">
-            @foreach($recentTasks as $task)
-                <div class="tm-task-row">
-                    <div class="tm-task-left">
-                        <span class="tm-status-dot tm-status-{{ $task->status }}"></span>
-                        <div>
-                            <p class="tm-task-title">{{ $task->title }}</p>
-                            <p class="tm-task-meta">
-                                {{ $task->category->name ?? '—' }}
-                            </p>
-                        </div>
-                    </div>
-                    <div class="tm-task-right">
-                        <span class="tm-badge tm-badge-{{ $task->status }}">
-                            {{ match($task->status) {
-                                'todo'        => 'À faire',
-                                'in_progress' => 'En cours',
-                                'done'        => 'Terminé',
-                                default       => $task->status
-                            } }}
-                        </span>
-                        <a href="{{ route('tasks.edit', $task) }}" class="tm-icon-btn" title="Modifier">✎</a>
-                    </div>
-                </div>
-            @endforeach
-        </div>
-    @endif
+{{-- ══ TÂCHES RÉCENTES EN CARDS ══ --}}
+<div class="tm-section-header">
+    <h2 class="tm-section-title">Tâches récentes</h2>
+    <a href="{{ route('tasks.index') }}" class="tm-link">Voir tout →</a>
 </div>
+
+@if($recentTasks->isEmpty())
+    <div class="tm-empty">
+        <span class="tm-empty-icon">◈</span>
+        <p>Aucune tâche pour le moment.</p>
+        <a href="{{ route('tasks.create') }}" class="tm-btn tm-btn-primary">Créer ma première tâche</a>
+    </div>
+@else
+    <div class="tm-task-grid">
+        @foreach($recentTasks as $task)
+            <div class="tm-task-card">
+
+                {{-- Badge catégorie --}}
+                <div class="tm-task-card-badge">
+                    {{ $task->category->name ?? '—' }}
+                </div>
+
+                {{-- Titre --}}
+                <h3 class="tm-task-card-title">{{ $task->title }}</h3>
+
+                {{-- Description --}}
+                @if($task->description)
+                    <div class="tm-task-card-body">
+                        <p>{{ Str::limit($task->description, 100) }}</p>
+                    </div>
+                @else
+                    <div class="tm-task-card-body tm-task-card-body--empty">
+                        <p>Aucune description</p>
+                    </div>
+                @endif
+
+                {{-- Statut --}}
+                <div class="tm-task-card-status">
+                    <span class="tm-status-dot tm-status-{{ $task->status }}"></span>
+                    <span class="tm-badge tm-badge-{{ $task->status }}">
+                        {{ match($task->status) {
+                            'todo'        => 'À faire',
+                            'in_progress' => 'En cours',
+                            'done'        => 'Terminé',
+                            default       => $task->status
+                        } }}
+                    </span>
+                </div>
+
+                {{-- Actions --}}
+                <div class="tm-task-card-actions">
+                    <a href="{{ route('tasks.edit', $task) }}" class="tm-btn tm-btn-primary tm-btn-sm">
+                        Modifier
+                    </a>
+                    <form method="POST" action="{{ route('tasks.destroy', $task) }}"
+                          onsubmit="return confirm('Supprimer cette tâche ?')">
+                        @csrf
+                        @method('DELETE')
+                        <button type="submit" class="tm-btn tm-btn-danger tm-btn-sm">
+                            Supprimer
+                        </button>
+                    </form>
+                </div>
+
+            </div>
+        @endforeach
+    </div>
+@endif
 
 @endsection

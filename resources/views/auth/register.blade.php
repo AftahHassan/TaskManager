@@ -1,52 +1,135 @@
-<x-guest-layout>
-    <form method="POST" action="{{ route('register') }}">
-        @csrf
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>TaskManager — Inscription</title>
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
+</head>
+<body class="tm-auth-body">
 
-        <!-- Name -->
-        <div>
-            <x-input-label for="name" :value="__('Name')" />
-            <x-text-input id="name" class="block mt-1 w-full" type="text" name="name" :value="old('name')" required autofocus autocomplete="name" />
-            <x-input-error :messages="$errors->get('name')" class="mt-2" />
+    <div class="tm-auth-left">
+        <div class="tm-auth-brand">
+            <span class="tm-auth-brand-icon">◈</span>
+            <span class="tm-auth-brand-name">Task<strong>Manager</strong></span>
         </div>
-
-        <!-- Email Address -->
-        <div class="mt-4">
-            <x-input-label for="email" :value="__('Email')" />
-            <x-text-input id="email" class="block mt-1 w-full" type="email" name="email" :value="old('email')" required autocomplete="username" />
-            <x-input-error :messages="$errors->get('email')" class="mt-2" />
+        <div class="tm-auth-left-content">
+            <h1 class="tm-auth-tagline">Commencez<br>dès aujourd'hui.</h1>
+            <p class="tm-auth-tagline-sub">Créez votre compte gratuitement et prenez le contrôle de vos tâches.</p>
+            <div class="tm-auth-features">
+                <div class="tm-auth-feature">
+                    <span class="tm-auth-feature-icon">◧</span>
+                    <span>Tableau de bord centralisé</span>
+                </div>
+                <div class="tm-auth-feature">
+                    <span class="tm-auth-feature-icon">◑</span>
+                    <span>Suivi par statut en temps réel</span>
+                </div>
+                <div class="tm-auth-feature">
+                    <span class="tm-auth-feature-icon">●</span>
+                    <span>Catégories personnalisées</span>
+                </div>
+            </div>
         </div>
+    </div>
 
-        <!-- Password -->
-        <div class="mt-4">
-            <x-input-label for="password" :value="__('Password')" />
+    <div class="tm-auth-right">
+        <div class="tm-auth-card">
 
-            <x-text-input id="password" class="block mt-1 w-full"
+            <div class="tm-auth-card-header">
+                <h2 class="tm-auth-card-title">Créer un compte</h2>
+                <p class="tm-auth-card-sub">Rejoignez TaskManager 🚀</p>
+            </div>
+
+            <form method="POST" action="{{ route('register') }}" class="tm-form">
+                @csrf
+
+                {{-- Nom --}}
+                <div class="tm-form-group">
+                    <label class="tm-label" for="name">Nom complet</label>
+                    <input
+                        id="name"
+                        type="text"
+                        name="name"
+                        value="{{ old('name') }}"
+                        class="tm-input @error('name') tm-input-error @enderror"
+                        placeholder="Votre nom"
+                        required
+                        autofocus
+                        autocomplete="name"
+                    />
+                    @error('name')
+                        <span class="tm-error-msg">{{ $message }}</span>
+                    @enderror
+                </div>
+
+                {{-- Email --}}
+                <div class="tm-form-group">
+                    <label class="tm-label" for="email">Adresse email</label>
+                    <input
+                        id="email"
+                        type="email"
+                        name="email"
+                        value="{{ old('email') }}"
+                        class="tm-input @error('email') tm-input-error @enderror"
+                        placeholder="vous@exemple.com"
+                        required
+                        autocomplete="username"
+                    />
+                    @error('email')
+                        <span class="tm-error-msg">{{ $message }}</span>
+                    @enderror
+                </div>
+
+                {{-- Mot de passe + Confirmation côte à côte --}}
+                <div class="tm-form-row">
+                    <div class="tm-form-group">
+                        <label class="tm-label" for="password">Mot de passe</label>
+                        <input
+                            id="password"
                             type="password"
                             name="password"
-                            required autocomplete="new-password" />
+                            class="tm-input @error('password') tm-input-error @enderror"
+                            placeholder="••••••••"
+                            required
+                            autocomplete="new-password"
+                        />
+                        @error('password')
+                            <span class="tm-error-msg">{{ $message }}</span>
+                        @enderror
+                    </div>
 
-            <x-input-error :messages="$errors->get('password')" class="mt-2" />
-        </div>
-
-        <!-- Confirm Password -->
-        <div class="mt-4">
-            <x-input-label for="password_confirmation" :value="__('Confirm Password')" />
-
-            <x-text-input id="password_confirmation" class="block mt-1 w-full"
+                    <div class="tm-form-group">
+                        <label class="tm-label" for="password_confirmation">Confirmation</label>
+                        <input
+                            id="password_confirmation"
                             type="password"
-                            name="password_confirmation" required autocomplete="new-password" />
+                            name="password_confirmation"
+                            class="tm-input @error('password_confirmation') tm-input-error @enderror"
+                            placeholder="••••••••"
+                            required
+                            autocomplete="new-password"
+                        />
+                        @error('password_confirmation')
+                            <span class="tm-error-msg">{{ $message }}</span>
+                        @enderror
+                    </div>
+                </div>
 
-            <x-input-error :messages="$errors->get('password_confirmation')" class="mt-2" />
+                {{-- Submit --}}
+                <button type="submit" class="tm-btn tm-btn-primary tm-btn-full">
+                    Créer mon compte →
+                </button>
+
+            </form>
+
+            <p class="tm-auth-switch">
+                Déjà un compte ?
+                <a href="{{ route('login') }}" class="tm-auth-switch-link">Se connecter</a>
+            </p>
+
         </div>
+    </div>
 
-        <div class="flex items-center justify-end mt-4">
-            <a class="underline text-sm text-gray-600 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" href="{{ route('login') }}">
-                {{ __('Already registered?') }}
-            </a>
-
-            <x-primary-button class="ms-4">
-                {{ __('Register') }}
-            </x-primary-button>
-        </div>
-    </form>
-</x-guest-layout>
+</body>
+</html>

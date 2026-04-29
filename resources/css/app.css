@@ -65,7 +65,7 @@
     --done-border:    #6ee7b7;
 
     /* ── Table header ── */
-    --table-header-bg: #f28b82;
+    --table-header-bg: #4f46e5;
     --table-header-text: #ffffff;
 
     /* ── Stat card accents ── */
@@ -422,27 +422,32 @@ body {
 .tm-alert {
     display: flex;
     align-items: center;
-    gap: 0.6rem;
-    padding: 0.8rem 1.1rem;
+    gap: 0.75rem;
+    padding: 1rem 1.4rem;
     border-radius: var(--radius-lg);
-    font-size: 0.875rem;
+    font-size: 0.95rem;
     font-weight: 500;
-    margin-bottom: 1.5rem;
+    margin-bottom: 1.75rem;
     animation: slideDown 0.3s ease;
     box-shadow: var(--shadow-sm);
+    width: 100%;
 }
 
 .tm-alert-success {
-    background: var(--done-bg);
-    border: 1px solid var(--done-border);
-    color: var(--done-color);
+    background: #f0fdf4;
+    border: 1.5px solid #86efac;
+    border-left: 4px solid #22c55e;
+    color: #15803d;
 }
 
 .tm-alert-error {
-    background: var(--danger-light);
-    border: 1px solid var(--danger-border);
-    color: var(--danger);
+    background: #fef2f2;
+    border: 1.5px solid #fca5a5;
+    border-left: 4px solid #ef4444;
+    color: #dc2626;
 }
+
+/* alert colors moved to tm-alert block */
 
 @keyframes slideDown {
     from { opacity: 0; transform: translateY(-8px); }
@@ -710,13 +715,31 @@ body {
     display: flex;
     align-items: center;
     gap: 0.75rem;
-    margin-bottom: 1.25rem;
-    flex-wrap: wrap;
+    margin-bottom: 1.5rem;
+    flex-wrap: nowrap;
     background: var(--bg-card);
     border: 1px solid var(--border);
     border-radius: var(--radius-xl);
-    padding: 0.9rem 1.1rem;
+    padding: 1rem 1.4rem;
     box-shadow: var(--shadow-xs);
+}
+
+.tm-filters .tm-select {
+    flex: 1;
+    min-width: 160px;
+    max-width: 240px;
+}
+
+.tm-filters-divider {
+    width: 1px;
+    height: 28px;
+    background: var(--border);
+    flex-shrink: 0;
+}
+
+.tm-filters .tm-btn {
+    flex-shrink: 0;
+    padding: 0.55rem 1.4rem;
 }
 
 /* ══════════════════════════════════════
@@ -1064,4 +1087,380 @@ body {
 @media (max-width: 480px) {
     .tm-stats-grid { grid-template-columns: 1fr 1fr; gap: 0.6rem; }
     .tm-splash-title { font-size: 2.2rem; }
+}
+
+/* ══════════════════════════════════════
+   TASK CARDS GRID (Dashboard)
+══════════════════════════════════════ */
+
+.tm-section-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 1.25rem;
+}
+
+.tm-section-title {
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: var(--text-primary);
+}
+
+.tm-task-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.25rem;
+}
+
+.tm-task-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-xl);
+    padding: 1.4rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.85rem;
+    box-shadow: var(--shadow-sm);
+    transition: all 0.2s ease;
+}
+
+.tm-task-card:hover {
+    box-shadow: var(--shadow-xl);
+    transform: translateY(-3px);
+    border-color: #cbd5e1;
+}
+
+/* Badge catégorie — style image référence */
+.tm-task-card-badge {
+    display: inline-block;
+    background: var(--primary);
+    color: #ffffff;
+    font-size: 0.75rem;
+    font-weight: 600;
+    padding: 0.25rem 0.85rem;
+    border-radius: 20px;
+    width: fit-content;
+    letter-spacing: 0.02em;
+}
+
+.tm-task-card-title {
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    line-height: 1.3;
+    letter-spacing: -0.01em;
+}
+
+/* Content box — style image référence */
+.tm-task-card-body {
+    background: var(--bg-input);
+    border: 1.5px solid var(--border);
+    border-radius: var(--radius-md);
+    padding: 0.8rem 1rem;
+    font-size: 0.85rem;
+    line-height: 1.7;
+    color: #334155;
+    flex: 1;
+}
+
+.tm-task-card-body--empty p {
+    color: var(--text-muted);
+    font-style: italic;
+}
+
+.tm-task-card-status {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+/* Actions — style image référence */
+.tm-task-card-actions {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    padding-top: 0.75rem;
+    border-top: 1px solid var(--border-light);
+    margin-top: auto;
+}
+
+/* Bouton sm */
+.tm-btn-sm {
+    padding: 0.4rem 0.9rem;
+    font-size: 0.82rem;
+    border-radius: var(--radius-sm);
+}
+
+/* ══════════════════════════════════════
+   CREATE PAGE — CENTRAGE FORMULAIRE
+══════════════════════════════════════ */
+
+.tm-create-wrap {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    padding-top: 1rem;
+}
+
+.tm-create-header {
+    text-align: center;
+    margin-bottom: 1.75rem;
+}
+
+.tm-create-wrap .tm-form-card {
+    width: 100%;
+    max-width: 680px;
+}
+
+/* ══════════════════════════════════════
+   RESPONSIVE CARDS
+══════════════════════════════════════ */
+
+@media (max-width: 1100px) {
+    .tm-task-grid { grid-template-columns: repeat(2, 1fr); }
+}
+
+@media (max-width: 640px) {
+    .tm-task-grid { grid-template-columns: 1fr; }
+}
+
+/* ══════════════════════════════════════
+   AUTH PAGES — LOGIN / REGISTER
+══════════════════════════════════════ */
+
+.tm-auth-body {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    min-height: 100vh;
+    background: var(--bg-page);
+    font-family: var(--font-main);
+}
+
+/* ── Panneau gauche (dark) ── */
+.tm-auth-left {
+    background: var(--bg-header);
+    display: flex;
+    flex-direction: column;
+    padding: 2.5rem 3rem;
+    position: relative;
+    overflow: hidden;
+}
+
+.tm-auth-left::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image:
+        linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
+    background-size: 48px 48px;
+    mask-image: radial-gradient(ellipse 80% 80% at 50% 50%, black, transparent);
+    -webkit-mask-image: radial-gradient(ellipse 80% 80% at 50% 50%, black, transparent);
+}
+
+.tm-auth-brand {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    position: relative;
+    z-index: 1;
+}
+
+.tm-auth-brand-icon {
+    font-size: 1.5rem;
+    color: #818cf8;
+}
+
+.tm-auth-brand-name {
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: #ffffff;
+    letter-spacing: -0.01em;
+}
+
+.tm-auth-brand-name strong {
+    color: #818cf8;
+    font-weight: 700;
+}
+
+.tm-auth-left-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    position: relative;
+    z-index: 1;
+    padding: 2rem 0;
+}
+
+.tm-auth-tagline {
+    font-size: 2.6rem;
+    font-weight: 800;
+    color: #ffffff;
+    line-height: 1.15;
+    letter-spacing: -0.04em;
+    margin-bottom: 1rem;
+}
+
+.tm-auth-tagline-sub {
+    font-size: 0.95rem;
+    color: rgba(255,255,255,0.45);
+    line-height: 1.6;
+    max-width: 340px;
+    margin-bottom: 2.5rem;
+    font-weight: 300;
+}
+
+.tm-auth-features {
+    display: flex;
+    flex-direction: column;
+    gap: 0.85rem;
+}
+
+.tm-auth-feature {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    color: rgba(255,255,255,0.6);
+    font-size: 0.9rem;
+    font-weight: 400;
+}
+
+.tm-auth-feature-icon {
+    font-size: 1rem;
+    color: #818cf8;
+    width: 20px;
+    text-align: center;
+    flex-shrink: 0;
+}
+
+/* ── Panneau droit (form) ── */
+.tm-auth-right {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+    background: var(--bg-page);
+}
+
+.tm-auth-card {
+    width: 100%;
+    max-width: 420px;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-2xl);
+    padding: 2.25rem 2.25rem 2rem;
+    box-shadow: var(--shadow-lg);
+}
+
+.tm-auth-card-header {
+    margin-bottom: 1.75rem;
+}
+
+.tm-auth-card-title {
+    font-size: 1.55rem;
+    font-weight: 800;
+    color: var(--text-primary);
+    letter-spacing: -0.03em;
+    margin-bottom: 0.25rem;
+}
+
+.tm-auth-card-sub {
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+    font-weight: 400;
+}
+
+/* Label row avec lien oublié */
+.tm-label-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 0.4rem;
+}
+
+.tm-label-row .tm-label {
+    margin-bottom: 0;
+}
+
+.tm-auth-forgot {
+    font-size: 0.78rem;
+    color: var(--primary);
+    text-decoration: none;
+    font-weight: 500;
+    transition: opacity 0.15s;
+}
+.tm-auth-forgot:hover { opacity: 0.7; }
+
+/* Checkbox */
+.tm-form-check {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.tm-checkbox {
+    width: 15px;
+    height: 15px;
+    border-radius: 4px;
+    border: 1px solid var(--border);
+    accent-color: var(--primary);
+    cursor: pointer;
+}
+
+.tm-check-label {
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+    cursor: pointer;
+    font-weight: 400;
+}
+
+/* Bouton pleine largeur */
+.tm-btn-full {
+    width: 100%;
+    justify-content: center;
+    padding: 0.7rem 1rem;
+    font-size: 0.95rem;
+    margin-top: 0.25rem;
+}
+
+/* Lien switch login/register */
+.tm-auth-switch {
+    text-align: center;
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+    margin-top: 1.5rem;
+    padding-top: 1.25rem;
+    border-top: 1px solid var(--border-light);
+}
+
+.tm-auth-switch-link {
+    color: var(--primary);
+    font-weight: 600;
+    text-decoration: none;
+    margin-left: 0.3rem;
+    transition: opacity 0.15s;
+}
+.tm-auth-switch-link:hover { opacity: 0.75; }
+
+/* ── Responsive auth ── */
+@media (max-width: 768px) {
+    .tm-auth-body {
+        grid-template-columns: 1fr;
+    }
+
+    .tm-auth-left {
+        display: none;
+    }
+
+    .tm-auth-right {
+        padding: 1.5rem 1rem;
+        align-items: flex-start;
+        padding-top: 3rem;
+    }
+
+    .tm-auth-card {
+        max-width: 100%;
+    }
 }

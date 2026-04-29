@@ -11,14 +11,17 @@
     <a href="{{ route('tasks.create') }}" class="tm-btn tm-btn-primary">⊕ Nouvelle tâche</a>
 </div>
 
-{{-- ══ FILTRES ══ --}}
+{{-- ══ FILTRES EN LIGNE ══ --}}
 <form method="GET" action="{{ route('tasks.index') }}" class="tm-filters">
+
     <select name="status" class="tm-select">
         <option value="">Tous les statuts</option>
         <option value="todo"        {{ request('status') === 'todo'        ? 'selected' : '' }}>À faire</option>
         <option value="in_progress" {{ request('status') === 'in_progress' ? 'selected' : '' }}>En cours</option>
         <option value="done"        {{ request('status') === 'done'        ? 'selected' : '' }}>Terminé</option>
     </select>
+
+    <div class="tm-filters-divider"></div>
 
     <select name="category_id" class="tm-select">
         <option value="">Toutes les catégories</option>
@@ -29,16 +32,21 @@
         @endforeach
     </select>
 
+    <div class="tm-filters-divider"></div>
+
     <button type="submit" class="tm-btn tm-btn-secondary">Filtrer</button>
     <a href="{{ route('tasks.index') }}" class="tm-btn tm-btn-ghost">Réinitialiser</a>
+
 </form>
 
-{{-- ══ TABLEAU DES TÂCHES ══ --}}
+{{-- ══ TABLEAU ══ --}}
 @if($tasks->isEmpty())
-    <div class="tm-empty">
-        <span class="tm-empty-icon">◈</span>
-        <p>Aucune tâche trouvée.</p>
-        <a href="{{ route('tasks.create') }}" class="tm-btn tm-btn-primary">Créer une tâche</a>
+    <div class="tm-table-wrap">
+        <div class="tm-empty">
+            <span class="tm-empty-icon">◈</span>
+            <p>Aucune tâche trouvée.</p>
+            <a href="{{ route('tasks.create') }}" class="tm-btn tm-btn-primary">Créer une tâche</a>
+        </div>
     </div>
 @else
     <div class="tm-table-wrap">
@@ -58,11 +66,13 @@
                     <td>
                         <div class="tm-task-title-cell">
                             <span class="tm-status-dot tm-status-{{ $task->status }}"></span>
-                            {{ $task->title }}
+                            <div>
+                                <p style="font-weight:600; color:var(--text-primary); font-size:0.9rem;">{{ $task->title }}</p>
+                                @if($task->description)
+                                    <p class="tm-task-desc">{{ Str::limit($task->description, 55) }}</p>
+                                @endif
+                            </div>
                         </div>
-                        @if($task->description)
-                            <p class="tm-task-desc">{{ Str::limit($task->description, 60) }}</p>
-                        @endif
                     </td>
                     <td>
                         <span class="tm-category-tag">{{ $task->category->name ?? '—' }}</span>
