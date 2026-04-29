@@ -10,17 +10,14 @@ class CategorySeeder extends Seeder
     public function run(): void
     {
         $categories = [
-            'Travail',
-            'Personnel',
-            'Urgent',
-            'Études',
-            'Sport'
+            ['name' => 'Travail'],
+            ['name' => 'Personnel'],
+            ['name' => 'Études'],
+            ['name' => 'Santé'],
         ];
 
-        foreach ($categories as $name) {
-            Category::create([
-                'name' => $name
-            ]);
+        foreach ($categories as $category) {
+            Category::create($category);
         }
     }
 }
