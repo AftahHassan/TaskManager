@@ -1,49 +1,47 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>TaskManager</title>
-
-    {{-- CSS --}}
-    @vite(['resources/css/app.css'])
-
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
-<body class="splash-body">
+<body class="tm-splash-body">
 
-    {{-- PAS DE NAVBAR --}}
-
-    {{-- Logo --}}
-    <div class="splash-logo">Task<span>Manager</span></div>
-
-    {{-- Tagline --}}
-    <p class="splash-tagline">Organisez vos tâches, boostez votre productivité</p>
-
-    {{-- Loading Bar --}}
-    <div class="splash-bar-container">
-        <div class="splash-bar"></div>
+    <div class="tm-splash-bg">
+        <div class="tm-splash-grid"></div>
     </div>
 
-    {{-- Status --}}
-    <p class="splash-status" id="status">Chargement...</p>
+    <div class="tm-splash-container">
+        <div class="tm-splash-logo">
+            <span class="tm-splash-icon">◈</span>
+            <h1 class="tm-splash-title">Task<strong>Manager</strong></h1>
+            <p class="tm-splash-subtitle">Organisez. Priorisez. Accomplissez.</p>
+        </div>
 
-    {{-- Version --}}
-    <p class="splash-version">Laravel v13 · TaskManager © 2026</p>
+        <div class="tm-splash-bar-wrap">
+            <div class="tm-splash-bar"></div>
+        </div>
+
+        <div class="tm-splash-actions">
+            @auth
+                <a href="{{ route('dashboard') }}" class="tm-btn tm-btn-primary">
+                    Accéder au Dashboard →
+                </a>
+            @else
+                <a href="{{ route('login') }}" class="tm-btn tm-btn-primary">Se connecter</a>
+                <a href="{{ route('register') }}" class="tm-btn tm-btn-ghost">Créer un compte</a>
+            @endauth
+        </div>
+    </div>
 
     <script>
+        // Auto-redirect si connecté
+        @auth
         setTimeout(() => {
-            document.getElementById('status').textContent = 'Prêt !';
-
-            setTimeout(() => {
-                @auth
-                    window.location.href = "{{ route('login') }}";
-                @else
-                    window.location.href = "{{ route('login') }}";
-                @endauth
-            }, 700);
-
+            window.location.href = "{{ route('dashboard') }}";
         }, 2500);
+        @endauth
     </script>
-
 </body>
 </html>

@@ -1,36 +1,70 @@
 <!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
-    <head>
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <meta name="csrf-token" content="{{ csrf_token() }}">
+<html lang="fr" class="dark">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>TaskManager — @yield('title', 'Dashboard')</title>
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
+</head>
+<body class="tm-body">
 
-        <title>{{ config('app.name', 'Laravel') }}</title>
-
-        <!-- Fonts -->
-        <link rel="preconnect" href="https://fonts.bunny.net">
-        <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
-
-        <!-- Scripts -->
-        @vite(['resources/css/app.css', 'resources/js/app.js'])
-    </head>
-    <body class="font-sans antialiased">
-        <div class="min-h-screen bg-gray-100">
-            @include('layouts.navigation')
-
-            <!-- Page Heading -->
-            @isset($header)
-                <header class="bg-white shadow">
-                    <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
-                        {{ $header }}
-                    </div>
-                </header>
-            @endisset
-
-            <!-- Page Content -->
-            <main>
-                {{ $slot }}
-            </main>
+    {{-- ══ SIDEBAR ══ --}}
+    <aside class="tm-sidebar">
+        <div class="tm-logo">
+            <span class="tm-logo-icon">◈</span>
+            <span class="tm-logo-text">Task<strong>Manager</strong></span>
         </div>
-    </body>
+
+        <nav class="tm-nav">
+            <a href="{{ route('dashboard') }}"
+               class="tm-nav-link {{ request()->routeIs('dashboard') ? 'active' : '' }}">
+                <span class="tm-nav-icon">⬡</span> Dashboard
+            </a>
+            <a href="{{ route('tasks.index') }}"
+               class="tm-nav-link {{ request()->routeIs('tasks.*') ? 'active' : '' }}">
+                <span class="tm-nav-icon">◧</span> Mes tâches
+            </a>
+            <a href="{{ route('tasks.create') }}"
+               class="tm-nav-link">
+                <span class="tm-nav-icon">⊕</span> Nouvelle tâche
+            </a>
+        </nav>
+
+        <div class="tm-sidebar-footer">
+            <div class="tm-user-info">
+                <div class="tm-avatar">{{ strtoupper(substr(auth()->user()->name, 0, 1)) }}</div>
+                <div class="tm-user-details">
+                    <span class="tm-user-name">{{ auth()->user()->name }}</span>
+                    <span class="tm-user-email">{{ auth()->user()->email }}</span>
+                </div>
+            </div>
+            <form method="POST" action="{{ route('logout') }}">
+                @csrf
+                <button type="submit" class="tm-logout-btn">
+                    <span>⏻</span> Déconnexion
+                </button>
+            </form>
+        </div>
+    </aside>
+
+    {{-- ══ MAIN CONTENT ══ --}}
+    <main class="tm-main">
+
+        {{-- Flash messages --}}
+        @if(session('success'))
+            <div class="tm-alert tm-alert-success">
+                <span>✓</span> {{ session('success') }}
+            </div>
+        @endif
+
+        @if(session('error'))
+            <div class="tm-alert tm-alert-error">
+                <span>✕</span> {{ session('error') }}
+            </div>
+        @endif
+
+        @yield('content')
+    </main>
+
+</body>
 </html>
