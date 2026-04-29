@@ -13,7 +13,8 @@ class TaskController extends Controller
     {
         $query = Task::where('user_id', auth()->id())
                      ->with('category');
-
+        //ici  c est pour afficher tout les taches des autres Users
+        // $query = Task::with(['category', 'user']);
         // Filtre par statut
         if ($request->status) {
             $query->where('status', $request->status);
