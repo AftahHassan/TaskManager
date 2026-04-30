@@ -15,7 +15,6 @@
 
 {{-- ══ STATS CARDS ══ --}}
 <div class="tm-stats-grid">
-
     <div class="tm-stat-card tm-stat-total">
         <div class="tm-stat-icon">◧</div>
         <div class="tm-stat-info">
@@ -23,7 +22,6 @@
             <span class="tm-stat-label">Total tâches</span>
         </div>
     </div>
-
     <div class="tm-stat-card tm-stat-todo">
         <div class="tm-stat-icon">○</div>
         <div class="tm-stat-info">
@@ -31,7 +29,6 @@
             <span class="tm-stat-label">À faire</span>
         </div>
     </div>
-
     <div class="tm-stat-card tm-stat-progress">
         <div class="tm-stat-icon">◑</div>
         <div class="tm-stat-info">
@@ -39,7 +36,6 @@
             <span class="tm-stat-label">En cours</span>
         </div>
     </div>
-
     <div class="tm-stat-card tm-stat-done">
         <div class="tm-stat-icon">●</div>
         <div class="tm-stat-info">
@@ -47,7 +43,6 @@
             <span class="tm-stat-label">Terminées</span>
         </div>
     </div>
-
 </div>
 
 {{-- ══ TÂCHES RÉCENTES EN CARDS ══ --}}
@@ -65,7 +60,7 @@
 @else
     <div class="tm-task-grid">
         @foreach($recentTasks as $task)
-            <div class="tm-task-card">
+            <div class="tm-task-card {{ $task->isOverdue() ? 'tm-task-card-overdue' : '' }}">
 
                 {{-- Badge catégorie --}}
                 <div class="tm-task-card-badge">
@@ -73,16 +68,39 @@
                 </div>
 
                 {{-- Titre --}}
-                <h3 class="tm-task-card-title">{{ $task->title }}</h3>
+                <h3 class="tm-task-card-title">
+                    {{ $task->title }}
+                    @if($task->isOverdue())
+                        <span class="tm-overdue-badge">En retard</span>
+                    @endif
+                </h3>
 
                 {{-- Description --}}
-                @if($task->description)
-                    <div class="tm-task-card-body">
-                        <p>{{ Str::limit($task->description, 100) }}</p>
-                    </div>
-                @else
-                    <div class="tm-task-card-body tm-task-card-body--empty">
-                        <p>Aucune description</p>
+                <div class="tm-task-card-body {{ !$task->description ? 'tm-task-card-body--empty' : '' }}">
+                    <p>{{ $task->description ? Str::limit($task->description, 90) : 'Aucune description' }}</p>
+                </div>
+
+                {{-- Échéance --}}
+                @if($task->due_date)
+                    <div class="tm-due-date {{ $task->isOverdue() ? 'tm-due-overdue' : ($task->daysLeft() <= 2 ? 'tm-due-soon' : 'tm-due-ok') }}">
+                        <span>
+                            @if($task->isOverdue()) ⚠
+                            @elseif($task->daysLeft() <= 2) ⏰
+                            @else 📅
+                            @endif
+                        </span>
+                        <span class="tm-due-date-text">{{ $task->due_date->format('d/m/Y') }}</span>
+                        <span class="tm-due-label">
+                            @if($task->isOverdue())
+                                · {{ abs($task->daysLeft()) }}j de retard
+                            @elseif($task->daysLeft() == 0)
+                                · Aujourd'hui
+                            @elseif($task->daysLeft() == 1)
+                                · Demain
+                            @else
+                                · Dans {{ $task->daysLeft() }}j
+                            @endif
+                        </span>
                     </div>
                 @endif
 
@@ -101,16 +119,12 @@
 
                 {{-- Actions --}}
                 <div class="tm-task-card-actions">
-                    <a href="{{ route('tasks.edit', $task) }}" class="tm-btn tm-btn-primary tm-btn-sm">
-                        Modifier
-                    </a>
+                    <a href="{{ route('tasks.edit', $task) }}" class="tm-btn tm-btn-primary tm-btn-sm">Modifier</a>
                     <form method="POST" action="{{ route('tasks.destroy', $task) }}"
                           onsubmit="return confirm('Supprimer cette tâche ?')">
                         @csrf
                         @method('DELETE')
-                        <button type="submit" class="tm-btn tm-btn-danger tm-btn-sm">
-                            Supprimer
-                        </button>
+                        <button type="submit" class="tm-btn tm-btn-danger tm-btn-sm">Supprimer</button>
                     </form>
                 </div>
 
