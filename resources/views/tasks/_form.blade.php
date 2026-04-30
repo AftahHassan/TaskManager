@@ -1,10 +1,6 @@
 {{-- 
-    Formulaire réutilisable pour create et edit.
-    Variables attendues :
-      - $task (optionnel, pour edit)
-      - $categories (collection)
-      - $action (URL du formulaire)
-      - $method (POST ou PUT)
+    Formulaire réutilisable create / edit
+    Variables : $action, $method, $task (optionnel), $categories
 --}}
 
 <form method="POST" action="{{ $action }}" class="tm-form">
@@ -45,17 +41,25 @@
         @enderror
     </div>
 
-    {{-- STATUT + CATÉGORIE (side by side) --}}
+    {{-- STATUT + CATÉGORIE --}}
     <div class="tm-form-row">
-
         <div class="tm-form-group">
             <label class="tm-label" for="status">Statut <span class="tm-required">*</span></label>
             <select id="status" name="status"
                     class="tm-select @error('status') tm-input-error @enderror">
                 <option value="">— Choisir —</option>
-                <option value="todo"        {{ old('status', $task->status ?? '') === 'todo'        ? 'selected' : '' }}>À faire</option>
-                <option value="in_progress" {{ old('status', $task->status ?? '') === 'in_progress' ? 'selected' : '' }}>En cours</option>
-                <option value="done"        {{ old('status', $task->status ?? '') === 'done'        ? 'selected' : '' }}>Terminé</option>
+                <option value="todo"
+                    {{ old('status', $task->status ?? '') === 'todo' ? 'selected' : '' }}>
+                    À faire
+                </option>
+                <option value="in_progress"
+                    {{ old('status', $task->status ?? '') === 'in_progress' ? 'selected' : '' }}>
+                    En cours
+                </option>
+                <option value="done"
+                    {{ old('status', $task->status ?? '') === 'done' ? 'selected' : '' }}>
+                    Terminé
+                </option>
             </select>
             @error('status')
                 <span class="tm-error-msg">{{ $message }}</span>
@@ -78,7 +82,25 @@
                 <span class="tm-error-msg">{{ $message }}</span>
             @enderror
         </div>
+    </div>
 
+    {{-- DATE D'ÉCHÉANCE --}}
+    <div class="tm-form-group">
+        <label class="tm-label" for="due_date">
+            Date d'échéance
+            <span class="tm-label-hint">(optionnelle)</span>
+        </label>
+        <input
+            type="date"
+            id="due_date"
+            name="due_date"
+            class="tm-input @error('due_date') tm-input-error @enderror"
+            value="{{ old('due_date', isset($task) && $task->due_date ? $task->due_date->format('Y-m-d') : '') }}"
+            min="{{ now()->format('Y-m-d') }}"
+        />
+        @error('due_date')
+            <span class="tm-error-msg">{{ $message }}</span>
+        @enderror
     </div>
 
     {{-- ACTIONS --}}

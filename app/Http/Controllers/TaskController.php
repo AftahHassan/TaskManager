@@ -8,24 +8,25 @@ use Illuminate\Http\Request;
 
 class TaskController extends Controller
 {
-    // 🔹 1. Liste des tâches + filtres
+    // 🔹 1. Liste des tâches + filtres + pagination
     public function index(Request $request)
     {
-             $query = Task::where('user_id', auth()->id())
-                      ->with('category');
+
+                          
         //ici  c est pour afficher tout les taches des autres Users
           //$query = Task::with(['category', 'user']);
-        // Filtre par statut
+        $query = Task::where('user_id', auth()->id())
+                     ->with('category');
+
         if ($request->status) {
             $query->where('status', $request->status);
         }
 
-        // Filtre par catégorie
         if ($request->category_id) {
             $query->where('category_id', $request->category_id);
         }
 
-        $tasks = $query->latest()->paginate(8);
+        $tasks      = $query->latest()->paginate(8);
         $categories = Category::all();
 
         return view('tasks.index', compact('tasks', 'categories'));
@@ -42,9 +43,10 @@ class TaskController extends Controller
     public function store(Request $request)
     {
         $data = $request->validate([
-            'title' => 'required|string|max:255',
+            'title'       => 'required|string|max:255',
             'description' => 'nullable|string',
-            'status' => 'required|string',
+            'status'      => 'required|string',
+            'due_date'    => 'nullable|date',
             'category_id' => 'required|exists:categories,id',
         ]);
 
@@ -59,27 +61,22 @@ class TaskController extends Controller
     // 🔹 4. Modifier (formulaire)
     public function edit(Task $task)
     {
-        // 🔐 sécurité
-        if ($task->user_id !== auth()->id()) {
-            abort(403);
-        }
+        if ($task->user_id !== auth()->id()) abort(403);
 
         $categories = Category::all();
-
         return view('tasks.edit', compact('task', 'categories'));
     }
 
     // 🔹 5. Mettre à jour
     public function update(Request $request, Task $task)
     {
-        if ($task->user_id !== auth()->id()) {
-            abort(403);
-        }
+        if ($task->user_id !== auth()->id()) abort(403);
 
         $data = $request->validate([
-            'title' => 'required|string|max:255',
+            'title'       => 'required|string|max:255',
             'description' => 'nullable|string',
-            'status' => 'required|string',
+            'status'      => 'required|string',
+            'due_date'    => 'nullable|date',
             'category_id' => 'required|exists:categories,id',
         ]);
 
@@ -92,9 +89,7 @@ class TaskController extends Controller
     // 🔹 6. Supprimer
     public function destroy(Task $task)
     {
-        if ($task->user_id !== auth()->id()) {
-            abort(403);
-        }
+        if ($task->user_id !== auth()->id()) abort(403);
 
         $task->delete();
 

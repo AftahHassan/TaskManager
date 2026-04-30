@@ -11,7 +11,7 @@
     <a href="{{ route('tasks.create') }}" class="tm-btn tm-btn-primary">⊕ Nouvelle tâche</a>
 </div>
 
-{{-- ══ FILTRES EN LIGNE ══ --}}
+{{-- ══ FILTRES ══ --}}
 <form method="GET" action="{{ route('tasks.index') }}" class="tm-filters">
 
     <select name="status" class="tm-select">
@@ -56,27 +56,35 @@
                     <th>Titre</th>
                     <th>Catégorie</th>
                     <th>Statut</th>
-                    <th>Date</th>
+                    <th>Échéance</th>
                     <th>Actions</th>
                 </tr>
             </thead>
             <tbody>
                 @foreach($tasks as $task)
-                <tr class="tm-table-row">
+                <tr class="tm-table-row {{ $task->isOverdue() ? 'tm-row-overdue' : '' }}">
+
                     <td>
                         <div class="tm-task-title-cell">
                             <span class="tm-status-dot tm-status-{{ $task->status }}"></span>
                             <div>
-                                <p style="font-weight:600; color:var(--text-primary); font-size:0.9rem;">{{ $task->title }}</p>
+                                <p class="tm-task-name {{ $task->isOverdue() ? 'tm-overdue-text' : '' }}">
+                                    {{ $task->title }}
+                                    @if($task->isOverdue())
+                                        <span class="tm-overdue-badge">En retard</span>
+                                    @endif
+                                </p>
                                 @if($task->description)
                                     <p class="tm-task-desc">{{ Str::limit($task->description, 55) }}</p>
                                 @endif
                             </div>
                         </div>
                     </td>
+
                     <td>
                         <span class="tm-category-tag">{{ $task->category->name ?? '—' }}</span>
                     </td>
+
                     <td>
                         <span class="tm-badge tm-badge-{{ $task->status }}">
                             {{ match($task->status) {
@@ -87,7 +95,36 @@
                             } }}
                         </span>
                     </td>
-                    <td class="tm-date-cell">{{ $task->created_at->format('d/m/Y') }}</td>
+
+                    <td>
+                        @if($task->due_date)
+                            <div class="tm-due-date {{ $task->isOverdue() ? 'tm-due-overdue' : ($task->daysLeft() <= 2 ? 'tm-due-soon' : 'tm-due-ok') }}">
+                                <span class="tm-due-icon">
+                                    @if($task->isOverdue()) ⚠
+                                    @elseif($task->daysLeft() <= 2) ⏰
+                                    @else 📅
+                                    @endif
+                                </span>
+                                <div>
+                                    <span class="tm-due-date-text">{{ $task->due_date->format('d/m/Y') }}</span>
+                                    <span class="tm-due-label">
+                                        @if($task->isOverdue())
+                                            {{ abs($task->daysLeft()) }}j de retard
+                                        @elseif($task->daysLeft() == 0)
+                                            Aujourd'hui
+                                        @elseif($task->daysLeft() == 1)
+                                            Demain
+                                        @else
+                                            Dans {{ $task->daysLeft() }}j
+                                        @endif
+                                    </span>
+                                </div>
+                            </div>
+                        @else
+                            <span class="tm-due-none">—</span>
+                        @endif
+                    </td>
+
                     <td>
                         <div class="tm-actions">
                             <a href="{{ route('tasks.edit', $task) }}" class="tm-icon-btn" title="Modifier">✎</a>
@@ -99,13 +136,14 @@
                             </form>
                         </div>
                     </td>
+
                 </tr>
                 @endforeach
             </tbody>
         </table>
     </div>
 
-    {{-- PAGINATION --}}
+    {{-- ══ PAGINATION ══ --}}
     <div class="tm-pagination">
         {{ $tasks->withQueryString()->links() }}
     </div>
