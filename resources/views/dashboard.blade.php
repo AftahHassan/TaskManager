@@ -45,9 +45,12 @@
     </div>
 </div>
 
-{{-- ══ TÂCHES RÉCENTES EN CARDS ══ --}}
+{{-- ══ TÂCHES EN CARDS ══ --}}
 <div class="tm-section-header">
-    <h2 class="tm-section-title">Tâches récentes</h2>
+    <h2 class="tm-section-title">
+        Tâches récentes
+        <span class="tm-section-count">{{ $recentTasks->total() }}</span>
+    </h2>
     <a href="{{ route('tasks.index') }}" class="tm-link">Voir tout →</a>
 </div>
 
@@ -55,7 +58,9 @@
     <div class="tm-empty">
         <span class="tm-empty-icon">◈</span>
         <p>Aucune tâche pour le moment.</p>
-        <a href="{{ route('tasks.create') }}" class="tm-btn tm-btn-primary">Créer ma première tâche</a>
+        <a href="{{ route('tasks.create') }}" class="tm-btn tm-btn-primary">
+            Créer ma première tâche
+        </a>
     </div>
 @else
     <div class="tm-task-grid">
@@ -119,18 +124,28 @@
 
                 {{-- Actions --}}
                 <div class="tm-task-card-actions">
-                    <a href="{{ route('tasks.edit', $task) }}" class="tm-btn tm-btn-primary tm-btn-sm">Modifier</a>
+                    <a href="{{ route('tasks.edit', $task) }}" class="tm-btn tm-btn-primary tm-btn-sm">
+                        Modifier
+                    </a>
                     <form method="POST" action="{{ route('tasks.destroy', $task) }}"
                           onsubmit="return confirm('Supprimer cette tâche ?')">
                         @csrf
                         @method('DELETE')
-                        <button type="submit" class="tm-btn tm-btn-danger tm-btn-sm">Supprimer</button>
+                        <button type="submit" class="tm-btn tm-btn-danger tm-btn-sm">
+                            Supprimer
+                        </button>
                     </form>
                 </div>
 
             </div>
         @endforeach
     </div>
+
+    {{-- ══ PAGINATION ══ --}}
+    <div class="tm-pagination">
+        {{ $recentTasks->links() }}
+    </div>
+
 @endif
 
 @endsection

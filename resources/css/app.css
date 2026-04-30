@@ -1464,3 +1464,190 @@ body {
         max-width: 100%;
     }
 }
+
+/* ══════════════════════════════════════
+   DUE DATE & OVERDUE STYLES
+══════════════════════════════════════ */
+
+/* ── Colonne échéance ── */
+.tm-due-date {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-size: 0.82rem;
+    font-weight: 500;
+    padding: 0.3rem 0.6rem;
+    border-radius: var(--radius-md);
+    width: fit-content;
+}
+
+.tm-due-date-text {
+    font-weight: 600;
+}
+
+.tm-due-label {
+    font-size: 0.72rem;
+    font-weight: 400;
+    display: block;
+    margin-top: 1px;
+}
+
+/* Variantes d'état */
+.tm-due-ok {
+    background: #f0fdf4;
+    color: #15803d;
+    border: 1px solid #bbf7d0;
+}
+
+.tm-due-soon {
+    background: #fffbeb;
+    color: #b45309;
+    border: 1px solid #fde68a;
+}
+
+.tm-due-overdue {
+    background: #fef2f2;
+    color: #dc2626;
+    border: 1px solid #fecaca;
+}
+
+.tm-due-none {
+    color: var(--text-muted);
+    font-size: 0.85rem;
+}
+
+/* ── Ligne tableau en retard ── */
+.tm-row-overdue {
+    background: #fff5f5 !important;
+    border-left: 3px solid #ef4444;
+}
+
+.tm-row-overdue:hover {
+    background: #fee2e2 !important;
+}
+
+/* ── Texte titre en retard ── */
+.tm-task-name {
+    font-weight: 600;
+    color: var(--text-primary);
+    font-size: 0.9rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+}
+
+.tm-overdue-text {
+    color: #dc2626 !important;
+}
+
+/* ── Badge "En retard" ── */
+.tm-overdue-badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.12rem 0.5rem;
+    background: #fef2f2;
+    color: #dc2626;
+    border: 1px solid #fecaca;
+    border-radius: 20px;
+    font-size: 0.68rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+/* ── Card overdue (dashboard) ── */
+.tm-task-card-overdue {
+    border-color: #fecaca !important;
+    border-left: 3px solid #ef4444 !important;
+    background: #fff9f9 !important;
+}
+
+.tm-task-card-overdue:hover {
+    border-color: #ef4444 !important;
+}
+
+/* ── Champ date dans le form ── */
+.tm-label-hint {
+    font-size: 0.72rem;
+    color: var(--text-muted);
+    font-weight: 400;
+    text-transform: none;
+    letter-spacing: 0;
+    margin-left: 0.3rem;
+}
+
+input[type="date"].tm-input {
+    cursor: pointer;
+}
+
+input[type="date"].tm-input::-webkit-calendar-picker-indicator {
+    opacity: 0.5;
+    cursor: pointer;
+}
+
+/* ══════════════════════════════════════
+   PAGINATION — SIMPLE
+══════════════════════════════════════ */
+
+.tm-pagination {
+    display: flex;
+    justify-content: center;
+    margin-top: 1.75rem;
+}
+
+.tm-pagination-inner {
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
+}
+
+.tm-page-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 36px;
+    height: 36px;
+    padding: 0 0.65rem;
+    border-radius: var(--radius-md);
+    font-size: 0.875rem;
+    font-weight: 500;
+    font-family: var(--font-main);
+    text-decoration: none;
+    border: 1px solid var(--border);
+    color: var(--text-secondary);
+    background: var(--bg-card);
+    box-shadow: var(--shadow-xs);
+    transition: all 0.15s ease;
+    cursor: pointer;
+}
+
+.tm-page-btn:hover {
+    border-color: var(--primary);
+    color: var(--primary);
+    background: var(--primary-light);
+    box-shadow: var(--shadow-sm);
+}
+
+.tm-page-active {
+    background: var(--primary) !important;
+    color: #ffffff !important;
+    border-color: var(--primary) !important;
+    box-shadow: var(--shadow-sm) !important;
+    cursor: default;
+}
+
+.tm-page-disabled {
+    opacity: 0.35;
+    cursor: not-allowed;
+    pointer-events: none;
+}
+
+.tm-page-dots {
+    border: none;
+    background: transparent;
+    box-shadow: none;
+    color: var(--text-muted);
+    cursor: default;
+    pointer-events: none;
+}
