@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Models\Task;
-use App\Models\Category;
 use Illuminate\Http\Request;
 
 class DashboardController extends Controller
@@ -22,8 +21,7 @@ class DashboardController extends Controller
         $recentTasks = Task::where('user_id', $userId)
             ->with('category')
             ->latest()
-            ->take(5)
-            ->get();
+            ->paginate(6);
 
         return view('dashboard', compact('stats', 'recentTasks'));
     }
