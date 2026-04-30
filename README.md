@@ -1,58 +1,317 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# 🚀 TaskManager - Laravel Task Management Application
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+## 📌 Project Description
 
-## About Laravel
+TaskManager est une application web moderne développée avec Laravel permettant aux utilisateurs de gérer efficacement leurs tâches quotidiennes grâce à une interface intuitive, une authentification sécurisée et un dashboard centralisé.
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+---
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+# ✨ Features
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+## 🔐 Authentication System
 
-## Learning Laravel
+Built with Laravel Breeze:
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+* User Registration
+* User Login
+* Secure Logout
+* Session Management
+* Protected Routes
 
-In addition, [Laracasts](https://laracasts.com) contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+---
 
-You can also watch bite-sized lessons with real-world projects on [Laravel Learn](https://laravel.com/learn), where you will be guided through building a Laravel application from scratch while learning PHP fundamentals.
+## 📋 Task CRUD System
 
-## Agentic Development
+Users can:
 
-Laravel's predictable structure and conventions make it ideal for AI coding agents like Claude Code, Cursor, and GitHub Copilot. Install [Laravel Boost](https://laravel.com/docs/ai) to supercharge your AI workflow:
+* ➕ Create tasks
+* 👀 View tasks
+* ✏️ Edit tasks
+* ❌ Delete tasks
 
-```bash
-composer require laravel/boost --dev
+---
 
-php artisan boost:install
+## 🗂️ Categories Management
+
+Each task belongs to a category:
+
+* Travail
+* Études
+* Personnel
+* Urgent
+
+---
+
+## 📊 Dashboard
+
+Central dashboard includes:
+
+* Total tasks
+* Pending tasks
+* In-progress tasks
+* Completed tasks
+* Recent tasks overview
+
+---
+
+# 🛠️ Built With
+
+* **Laravel 13**
+* **PHP 8+**
+* **MySQL**
+* **Blade**
+* **Tailwind CSS**
+* **Vite**
+* **Laravel Breeze**
+* **Laravel Debugbar**
+* **Laravel Telescope**
+
+---
+
+# 📂 Project Structure
+
+```text
+TaskManager/
+│
+├── app/
+│   ├── Http/Controllers/
+│   │   ├── DashboardController.php
+│   │   └── TaskController.php
+│   │
+│   └── Models/
+│       ├── User.php
+│       ├── Task.php
+│       └── Category.php
+│
+├── database/
+│   ├── migrations/
+│   ├── factories/
+│   └── seeders/
+│
+├── resources/views/
+│   ├── welcome.blade.php
+│   ├── dashboard.blade.php
+│   └── tasks/
+│
+└── routes/
+    └── web.php
 ```
 
-Boost provides your agent 15+ tools and skills that help agents build Laravel applications while following best practices.
+---
 
-## Contributing
+# 🗄️ Database Schema
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+## Users Table
 
-## Code of Conduct
+* id
+* name
+* email
+* password
+* timestamps
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+## Categories Table
 
-## Security Vulnerabilities
+* id
+* name
+* timestamps
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+## Tasks Table
 
-## License
+* id
+* title
+* description
+* status
+* user_id
+* category_id
+* timestamps
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+---
+
+# 🔗 Relationships
+
+### User
+
+```php
+User hasMany(Task::class)
+```
+
+### Category
+
+```php
+Category hasMany(Task::class)
+```
+
+### Task
+
+```php
+Task belongsTo(User::class)
+Task belongsTo(Category::class)
+```
+
+---
+
+# ⚙️ Installation
+
+## 1️⃣ Clone Repository
+
+```bash
+git clone https://github.com/your-username/TaskManager.git
+cd TaskManager
+```
+
+---
+
+## 2️⃣ Install Dependencies
+
+```bash
+composer install
+npm install
+```
+
+---
+
+## 3️⃣ Environment Setup
+
+```bash
+cp .env.example .env
+php artisan key:generate
+```
+
+### Configure `.env`
+
+```env
+DB_DATABASE=taskmanager
+DB_USERNAME=root
+DB_PASSWORD=
+```
+
+---
+
+## 4️⃣ Run Migrations + Seeders
+
+```bash
+php artisan migrate:fresh --seed
+```
+
+---
+
+## 5️⃣ Run Application
+
+### Laravel Server:
+
+```bash
+php artisan serve
+```
+
+### Vite Server:
+
+```bash
+npm run dev
+```
+
+---
+
+# 👤 Default Categories Seeder
+
+```text
+Travail
+Études
+Personnel
+Urgent
+```
+
+---
+
+# 🔒 Security Logic
+
+Each user accesses only their own tasks:
+
+```php
+Task::where('user_id', auth()->id())
+```
+
+For global task display:
+
+```php
+Task::with(['category', 'user'])
+```
+
+---
+
+# 🧪 Development Tools
+
+## Laravel Debugbar
+
+Used for:
+
+* Query debugging
+* Performance monitoring
+* N+1 detection
+
+## Laravel Telescope
+
+Used for:
+
+* Request tracking
+* Exception monitoring
+* Logs inspection
+
+---
+
+# 📸 User Flow
+
+```text
+Splash Screen
+   ↓
+Login / Register
+   ↓
+Dashboard
+   ↓
+Task CRUD Management
+```
+
+---
+
+# 📈 Current Progress
+
+## ✅ Completed
+
+* Project Setup
+* Database Design
+* Models
+* Migrations
+* Seeders
+* Authentication
+* Splash Screen
+* Routing
+* Controllers
+
+## 🚧 In Progress
+
+* Dashboard UI
+* Task Views
+* Frontend Enhancements
+
+---
+
+# 🚀 Future Improvements
+
+* Admin Panel
+* Role Management
+* Task Search
+* Notifications
+* Deadlines
+* API Integration
+* Dark Mode
+
+---
+
+# 👨‍💻 Author
+
+## Hassan AFTAH
+
+---
+
+# 📄 License
+
+This project is for educational, portfolio, and learning purposes.
