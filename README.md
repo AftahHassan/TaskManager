@@ -155,7 +155,7 @@ Task belongsTo(Category::class)
 ## 1️⃣ Clone Repository
 
 ```bash
-git clone https://github.com/your-username/TaskManager.git
+git clone https://github.com/AftahHassan/TaskManager.git
 cd TaskManager
 ```
 
@@ -312,6 +312,4 @@ Task CRUD Management
 
 ---
 
-# 📄 License
 
-This project is for educational, portfolio, and learning purposes.
