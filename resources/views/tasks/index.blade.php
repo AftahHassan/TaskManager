@@ -13,16 +13,13 @@
 
 {{-- ══ FILTRES ══ --}}
 <form method="GET" action="{{ route('tasks.index') }}" class="tm-filters">
-
     <select name="status" class="tm-select">
         <option value="">Tous les statuts</option>
         <option value="todo"        {{ request('status') === 'todo'        ? 'selected' : '' }}>À faire</option>
         <option value="in_progress" {{ request('status') === 'in_progress' ? 'selected' : '' }}>En cours</option>
         <option value="done"        {{ request('status') === 'done'        ? 'selected' : '' }}>Terminé</option>
     </select>
-
     <div class="tm-filters-divider"></div>
-
     <select name="category_id" class="tm-select">
         <option value="">Toutes les catégories</option>
         @foreach($categories as $cat)
@@ -31,12 +28,9 @@
             </option>
         @endforeach
     </select>
-
     <div class="tm-filters-divider"></div>
-
     <button type="submit" class="tm-btn tm-btn-secondary">Filtrer</button>
     <a href="{{ route('tasks.index') }}" class="tm-btn tm-btn-ghost">Réinitialiser</a>
-
 </form>
 
 {{-- ══ TABLEAU ══ --}}
@@ -99,23 +93,14 @@
                     <td>
                         @if($task->due_date)
                             <div class="tm-due-date {{ $task->isOverdue() ? 'tm-due-overdue' : ($task->daysLeft() <= 2 ? 'tm-due-soon' : 'tm-due-ok') }}">
-                                <span class="tm-due-icon">
-                                    @if($task->isOverdue()) ⚠
-                                    @elseif($task->daysLeft() <= 2) ⏰
-                                    @else 📅
-                                    @endif
-                                </span>
+                                <span>@if($task->isOverdue()) ⚠ @elseif($task->daysLeft() <= 2) ⏰ @else 📅 @endif</span>
                                 <div>
                                     <span class="tm-due-date-text">{{ $task->due_date->format('d/m/Y') }}</span>
                                     <span class="tm-due-label">
-                                        @if($task->isOverdue())
-                                            {{ abs($task->daysLeft()) }}j de retard
-                                        @elseif($task->daysLeft() == 0)
-                                            Aujourd'hui
-                                        @elseif($task->daysLeft() == 1)
-                                            Demain
-                                        @else
-                                            Dans {{ $task->daysLeft() }}j
+                                        @if($task->isOverdue()) {{ abs($task->daysLeft()) }}j de retard
+                                        @elseif($task->daysLeft() == 0) Aujourd'hui
+                                        @elseif($task->daysLeft() == 1) Demain
+                                        @else Dans {{ $task->daysLeft() }}j
                                         @endif
                                     </span>
                                 </div>
@@ -127,12 +112,34 @@
 
                     <td>
                         <div class="tm-actions">
-                            <a href="{{ route('tasks.edit', $task) }}" class="tm-icon-btn" title="Modifier">✎</a>
+                            {{-- Bouton Voir --}}
+                            <button type="button"
+                                class="tm-icon-btn tm-icon-btn-view"
+                                title="Voir le détail"
+                                onclick="openModal(
+                                    '{{ addslashes($task->title) }}',
+                                    '{{ addslashes($task->description ?? 'Aucune description') }}',
+                                    '{{ $task->status }}',
+                                    '{{ match($task->status) { 'todo' => 'À faire', 'in_progress' => 'En cours', 'done' => 'Terminé', default => $task->status } }}',
+                                    '{{ $task->category->name ?? '—' }}',
+                                    '{{ $task->due_date ? $task->due_date->format('d/m/Y') : '' }}',
+                                    '{{ $task->created_at->format('d/m/Y') }}'
+                                )">
+                                👁
+                            </button>
+
+                            {{-- Bouton Modifier --}}
+                            <a href="{{ route('tasks.edit', $task) }}"
+                               class="tm-icon-btn" title="Modifier">✎</a>
+
+                            {{-- Bouton Supprimer --}}
                             <form method="POST" action="{{ route('tasks.destroy', $task) }}"
                                   onsubmit="return confirm('Supprimer cette tâche ?')">
                                 @csrf
                                 @method('DELETE')
-                                <button type="submit" class="tm-icon-btn tm-icon-btn-danger" title="Supprimer">✕</button>
+                                <button type="submit"
+                                    class="tm-icon-btn tm-icon-btn-danger"
+                                    title="Supprimer">✕</button>
                             </form>
                         </div>
                     </td>
@@ -143,10 +150,84 @@
         </table>
     </div>
 
-    {{-- ══ PAGINATION ══ --}}
+    {{-- PAGINATION --}}
     <div class="tm-pagination">
         {{ $tasks->withQueryString()->links() }}
     </div>
 @endif
+
+{{-- ══ MODAL DÉTAIL TÂCHE ══ --}}
+<div id="tm-modal-overlay" class="tm-modal-overlay" onclick="closeModal()">
+    <div class="tm-modal" onclick="event.stopPropagation()">
+
+        <div class="tm-modal-header">
+            <div>
+                <span id="modal-category" class="tm-task-card-badge"></span>
+                <h2 id="modal-title" class="tm-modal-title"></h2>
+            </div>
+            <button class="tm-modal-close" onclick="closeModal()">✕</button>
+        </div>
+
+        <div class="tm-modal-body">
+
+            <div class="tm-modal-section">
+                <p class="tm-modal-label">Description</p>
+                <div class="tm-modal-content-box">
+                    <p id="modal-description"></p>
+                </div>
+            </div>
+
+            <div class="tm-modal-meta">
+                <div class="tm-modal-meta-item">
+                    <span class="tm-modal-label">Statut</span>
+                    <span id="modal-status-badge"></span>
+                </div>
+                <div class="tm-modal-meta-item">
+                    <span class="tm-modal-label">Échéance</span>
+                    <span id="modal-due" class="tm-modal-meta-value"></span>
+                </div>
+                <div class="tm-modal-meta-item">
+                    <span class="tm-modal-label">Créée le</span>
+                    <span id="modal-created" class="tm-modal-meta-value"></span>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="tm-modal-footer">
+            <button class="tm-btn tm-btn-ghost" onclick="closeModal()">Fermer</button>
+        </div>
+
+    </div>
+</div>
+
+<script>
+function openModal(title, description, status, statusLabel, category, dueDate, createdAt) {
+    document.getElementById('modal-title').textContent       = title;
+    document.getElementById('modal-description').textContent = description;
+    document.getElementById('modal-category').textContent    = category;
+    document.getElementById('modal-due').textContent         = dueDate || '—';
+    document.getElementById('modal-created').textContent     = createdAt;
+
+    // Badge statut
+    const badge = document.getElementById('modal-status-badge');
+    badge.textContent = statusLabel;
+    badge.className   = 'tm-badge tm-badge-' + status;
+
+    // Afficher overlay
+    document.getElementById('tm-modal-overlay').classList.add('tm-modal-open');
+    document.body.style.overflow = 'hidden';
+}
+
+function closeModal() {
+    document.getElementById('tm-modal-overlay').classList.remove('tm-modal-open');
+    document.body.style.overflow = '';
+}
+
+// Fermer avec Escape
+document.addEventListener('keydown', e => {
+    if (e.key === 'Escape') closeModal();
+});
+</script>
 
 @endsection

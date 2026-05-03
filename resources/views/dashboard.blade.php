@@ -3,17 +3,15 @@
 
 @section('content')
 
+{{-- ══ HEADER ══ --}}
 <div class="tm-page-header">
     <div>
         <h1 class="tm-page-title">Dashboard</h1>
         <p class="tm-page-sub">Bonjour, {{ auth()->user()->name }} 👋</p>
     </div>
-    <a href="{{ route('tasks.create') }}" class="tm-btn tm-btn-primary">
-        ⊕ Nouvelle tâche
-    </a>
 </div>
 
-{{-- ══ STATS CARDS ══ --}}
+{{-- ══ STATS ══ --}}
 <div class="tm-stats-grid">
     <div class="tm-stat-card tm-stat-total">
         <div class="tm-stat-icon">◧</div>
@@ -45,7 +43,7 @@
     </div>
 </div>
 
-{{-- ══ TÂCHES EN CARDS ══ --}}
+{{-- ══ TÂCHES RÉCENTES ══ --}}
 <div class="tm-section-header">
     <h2 class="tm-section-title">
         Tâches récentes
@@ -67,9 +65,17 @@
         @foreach($recentTasks as $task)
             <div class="tm-task-card {{ $task->isOverdue() ? 'tm-task-card-overdue' : '' }}">
 
-                {{-- Badge catégorie --}}
-                <div class="tm-task-card-badge">
-                    {{ $task->category->name ?? '—' }}
+                {{-- Catégorie + Statut --}}
+                <div class="tm-task-card-top">
+                    <span class="tm-task-card-badge">{{ $task->category->name ?? '—' }}</span>
+                    <span class="tm-badge tm-badge-{{ $task->status }}">
+                        {{ match($task->status) {
+                            'todo'        => 'À faire',
+                            'in_progress' => 'En cours',
+                            'done'        => 'Terminé',
+                            default       => $task->status
+                        } }}
+                    </span>
                 </div>
 
                 {{-- Titre --}}
@@ -88,64 +94,36 @@
                 {{-- Échéance --}}
                 @if($task->due_date)
                     <div class="tm-due-date {{ $task->isOverdue() ? 'tm-due-overdue' : ($task->daysLeft() <= 2 ? 'tm-due-soon' : 'tm-due-ok') }}">
-                        <span>
-                            @if($task->isOverdue()) ⚠
-                            @elseif($task->daysLeft() <= 2) ⏰
-                            @else 📅
-                            @endif
-                        </span>
+                        <span>@if($task->isOverdue()) ⚠ @elseif($task->daysLeft() <= 2) ⏰ @else 📅 @endif</span>
                         <span class="tm-due-date-text">{{ $task->due_date->format('d/m/Y') }}</span>
                         <span class="tm-due-label">
-                            @if($task->isOverdue())
-                                · {{ abs($task->daysLeft()) }}j de retard
-                            @elseif($task->daysLeft() == 0)
-                                · Aujourd'hui
-                            @elseif($task->daysLeft() == 1)
-                                · Demain
-                            @else
-                                · Dans {{ $task->daysLeft() }}j
+                            @if($task->isOverdue()) · {{ abs($task->daysLeft()) }}j de retard
+                            @elseif($task->daysLeft() == 0) · Aujourd'hui
+                            @elseif($task->daysLeft() == 1) · Demain
+                            @else · Dans {{ $task->daysLeft() }}j
                             @endif
                         </span>
                     </div>
                 @endif
 
-                {{-- Statut --}}
-                <div class="tm-task-card-status">
-                    <span class="tm-status-dot tm-status-{{ $task->status }}"></span>
-                    <span class="tm-badge tm-badge-{{ $task->status }}">
-                        {{ match($task->status) {
-                            'todo'        => 'À faire',
-                            'in_progress' => 'En cours',
-                            'done'        => 'Terminé',
-                            default       => $task->status
-                        } }}
+                {{-- Footer card : date création seulement --}}
+                <div class="tm-task-card-footer">
+                    <span class="tm-task-card-date">
+                        📌 {{ $task->created_at->format('d/m/Y') }}
                     </span>
-                </div>
-
-                {{-- Actions --}}
-                <div class="tm-task-card-actions">
-                    <a href="{{ route('tasks.edit', $task) }}" class="tm-btn tm-btn-primary tm-btn-sm">
-                        Modifier
+                    <a href="{{ route('tasks.index') }}" class="tm-card-view-link">
+                        Voir toutes →
                     </a>
-                    <form method="POST" action="{{ route('tasks.destroy', $task) }}"
-                          onsubmit="return confirm('Supprimer cette tâche ?')">
-                        @csrf
-                        @method('DELETE')
-                        <button type="submit" class="tm-btn tm-btn-danger tm-btn-sm">
-                            Supprimer
-                        </button>
-                    </form>
                 </div>
 
             </div>
         @endforeach
     </div>
 
-    {{-- ══ PAGINATION ══ --}}
+    {{-- PAGINATION --}}
     <div class="tm-pagination">
         {{ $recentTasks->links() }}
     </div>
-
 @endif
 
 @endsection

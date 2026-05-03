@@ -1651,3 +1651,249 @@ input[type="date"].tm-input::-webkit-calendar-picker-indicator {
     cursor: default;
     pointer-events: none;
 }
+
+/* ══════════════════════════════════════
+   MODAL DÉTAIL TÂCHE
+══════════════════════════════════════ */
+
+.tm-modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(15, 23, 42, 0.55);
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1.5rem;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.25s ease;
+}
+
+.tm-modal-overlay.tm-modal-open {
+    opacity: 1;
+    pointer-events: all;
+}
+
+.tm-modal {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-2xl);
+    width: 100%;
+    max-width: 540px;
+    box-shadow: var(--shadow-xl);
+    transform: translateY(20px) scale(0.97);
+    transition: transform 0.25s ease;
+    overflow: hidden;
+}
+
+.tm-modal-overlay.tm-modal-open .tm-modal {
+    transform: translateY(0) scale(1);
+}
+
+/* Header modal */
+.tm-modal-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 1.5rem 1.75rem 1rem;
+    border-bottom: 1px solid var(--border-light);
+}
+
+.tm-modal-title {
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    letter-spacing: -0.02em;
+    margin-top: 0.5rem;
+    line-height: 1.3;
+}
+
+.tm-modal-close {
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    background: var(--bg-input);
+    color: var(--text-secondary);
+    cursor: pointer;
+    font-size: 0.8rem;
+    flex-shrink: 0;
+    transition: all 0.15s;
+    font-family: var(--font-main);
+}
+
+.tm-modal-close:hover {
+    border-color: var(--danger-border);
+    color: var(--danger);
+    background: var(--danger-light);
+}
+
+/* Body modal */
+.tm-modal-body {
+    padding: 1.25rem 1.75rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+}
+
+.tm-modal-section {}
+
+.tm-modal-label {
+    font-size: 0.72rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--text-muted);
+    margin-bottom: 0.5rem;
+    display: block;
+}
+
+.tm-modal-content-box {
+    background: var(--bg-input);
+    border: 1.5px solid var(--border);
+    border-radius: var(--radius-md);
+    padding: 0.9rem 1.1rem;
+    font-size: 0.9rem;
+    line-height: 1.7;
+    color: var(--text-secondary);
+    min-height: 70px;
+}
+
+/* Meta grid */
+.tm-modal-meta {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0.75rem;
+}
+
+.tm-modal-meta-item {
+    background: var(--bg-input);
+    border: 1px solid var(--border-light);
+    border-radius: var(--radius-md);
+    padding: 0.75rem 0.9rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+}
+
+.tm-modal-meta-value {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+/* Footer modal */
+.tm-modal-footer {
+    padding: 1rem 1.75rem 1.5rem;
+    display: flex;
+    justify-content: flex-end;
+    border-top: 1px solid var(--border-light);
+}
+
+/* ── Bouton voir (oeil) ── */
+.tm-icon-btn-view:hover {
+    border-color: #6366f1;
+    color: #6366f1;
+    background: rgba(99, 102, 241, 0.08);
+}
+
+/* ══════════════════════════════════════
+   DASHBOARD CARD — améliorations pro
+══════════════════════════════════════ */
+
+.tm-task-card-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem;
+}
+
+.tm-task-card-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-top: 0.75rem;
+    border-top: 1px solid var(--border-light);
+    margin-top: auto;
+}
+
+.tm-task-card-date {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    font-weight: 400;
+}
+
+.tm-card-view-link {
+    font-size: 0.78rem;
+    color: var(--primary);
+    text-decoration: none;
+    font-weight: 600;
+    transition: opacity 0.15s;
+}
+
+.tm-card-view-link:hover {
+    opacity: 0.7;
+}
+
+/* Section count badge */
+.tm-section-count {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 22px;
+    height: 22px;
+    padding: 0 6px;
+    background: var(--primary-light);
+    color: var(--primary);
+    border: 1px solid var(--primary-border);
+    border-radius: 20px;
+    font-size: 0.72rem;
+    font-weight: 700;
+    margin-left: 0.5rem;
+    vertical-align: middle;
+}
+
+/* ══ FIX MODAL CONTENT BOX — overflow ══ */
+.tm-modal-content-box {
+    overflow: hidden;
+    overflow-y: auto;
+    word-break: break-word;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    white-space: pre-wrap;
+    max-height: 150px;
+}
+
+/* ══ FIX CARDS — même taille ══ */
+.tm-task-grid {
+    align-items: stretch;
+}
+
+.tm-task-card {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.tm-task-card-body {
+    flex: 1;
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow-wrap: break-word;
+    word-break: break-word;
+    min-height: 80px;
+    max-height: 80px;
+}
+
+.tm-task-card-footer {
+    margin-top: auto;
+}
