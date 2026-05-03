@@ -24,6 +24,12 @@ Route::middleware(['auth'])->group(function () {
     Route::put('/tasks/{task}',       [TaskController::class, 'update']) ->name('tasks.update');
     Route::delete('/tasks/{task}',    [TaskController::class, 'destroy'])->name('tasks.destroy');
 
+    Route::middleware(['auth', 'prevent.back'])->group(function () {
+    Route::get('/dashboard', [DashboardController::class, 'index'])
+        ->name('dashboard');
+    // ... reste des routes
+});
+
 });
 
 require __DIR__.'/auth.php';
